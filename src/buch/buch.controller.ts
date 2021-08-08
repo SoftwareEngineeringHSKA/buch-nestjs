@@ -3,14 +3,13 @@ import { Controller } from '@nestjs/common';
 import { Buch } from "./buch";
 import { BuchService } from "./buch.service";
 
-@Controller('buch')
+@Controller('buecher')
 export class BuchController {
 
 	constructor(private readonly buchService: BuchService) {}
 
 	@Post()
 	async create(@Body('buch') buch: Buch) {
-		console.log('titel', buch)
 	  await this.buchService.create(buch);
 	}
   

@@ -9,7 +9,6 @@ export class BuchService {
 	constructor(@InjectModel('Buch') private buchModel: Model<BuchDocument>) {}
 
 	async create(buch: Buch): Promise<Buch> {
-		console.log('titel2', buch)
 	  const createdBuch = new this.buchModel(buch);
 	  return createdBuch.save();
 	}

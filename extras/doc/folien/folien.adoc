@@ -1,0 +1,121 @@
+:revealjsdir: ../../node_modules/reveal.js
+:revealjs_slideNumber: true
+:sectnums:
+
+// Copyright (C) 2020 - present Juergen Zimmermann, Hochschule Karlsruhe
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+// https://asciidoctor.org/docs/asciidoctor-revealjs
+
+= Beispiel mit MEAN, REST, GraphQL, Mongoose, JWT und Jest
+
+Jürgen Zimmermann <Juergen.Zimmermann@h-ka.de>
+
+== Gliederung
+
+* Werkzeuge
+* Node
+* Express und REST
+* GraphQL
+* Mongoose
+* JWT
+* Jest, Chai, Axios und Istanbul
+
+== Werkzeuge
+
+* Infrastruktur
+* Entwicklungsumgebung
+* CI und Deployment
+* Dokumentation
+
+=== Infrastruktur
+
+* npm
+* nodemon
+* ts-node
+
+=== Entwicklungsumgebung
+
+* VS Code
+* TypeScript und ES 2015+
+* ESLint und SonarQube
+* Prettier
+* RESTclient, auch für GraphQL
+
+=== CI und Deployment
+
+* Docker Images, hadolint und dive
+* Kubernetes
+  - Kustomize
+  - Skaffold
+  - Lens und Octant: Pods, Logs, ...
+* Heroku und Buildpack
+* Continuous Integration (CI) durch eine Jenkins Pipeline
+
+=== Dokumentation
+
+* AsciiDoctor mit PlantUML
+* reveal.js
+* _TODO: Jekyll_
+
+== Node
+
+* package.json
+* node_modules
+* Server einschl. Listener
+
+== Express und REST
+
+* Router
+* Handler
+
+== GraphQL und Apollo Server
+
+* typeDefs und gql
+* resolver
+* Playground
+
+== Mongoose
+
+* Pattern _Active Record_
+* Document
+* JSON
+* (GridFS)
+
+== JWT
+
+* Private und Public Key
+* Header
+* Payload
+* Signature
+
+=== Header
+
+* alg
+* typ
+
+=== Payload
+
+* iat
+* exp
+* iss
+
+== Jest, Chai, Axios und Istanbul
+
+* Jest
+* ts-jest
+* Chai
+* Axios
+* Istanbul
