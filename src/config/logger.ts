@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 - present Juergen Zimmermann, Hochschule Karlsruhe
+ * Copyright (C) 2021 - present Juergen Zimmermann, Hochschule Karlsruhe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  */
 
 import { Cloud, cloud } from './cloud';
+
 import type { Format } from 'logform';
 import JSON5 from 'json5';
 import { env } from './env';

@@ -116,4 +116,4 @@ export class Buch {
     readonly autoren: unknown;
 }
 
-export const buchSchema = SchemaFactory.createForClass(Buch);
+export const BuchSchema = SchemaFactory.createForClass(Buch);

@@ -28,7 +28,7 @@
     "skipLibCheck": true, // keine Typ-Pruefungen in .d.ts-Dateien
     "strict": false, // alle "strict"-Optionen aktivieren
     "useUnknownInCatchVariables": true, // unknown als default-Typ bei catch-Klauseln
-
+    "emitDecoratorMetadata": true,
     "lib": [
       "ES5",
       "ES2015",
