@@ -36,4 +36,4 @@ spec:
   # https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
   hostPath:
     path: /run/desktop/mnt/host/c/Zimmermann/volumes/mongodb-standalone-5.0/db
-    type: Directory
+    type: DirectoryOrCreate

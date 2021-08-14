@@ -1,16 +1,44 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
+    "rootDir": ".",
+    "outDir": "dist",
+
+    "target": "ES2020", // Kompatibilitaet mit ECMAScript-Standard
+    // "module": "ES2020", // ECMAScript Module einschl. import(...)
+    // "moduleResolution": "Node",
+    "module": "commonjs", // urspruengl. Modulsystem fuer Node mit require(...)
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true
-  }
+    "esModuleInterop": true, // Kompatibilitaet zwischen CommonJS und ES Modulen, impliziert allowSyntheticDefaultImports=true
+    "exactOptionalPropertyTypes": true, // bei optionalen Properties ggf. explizit undefined spezifizieren
+    "forceConsistentCasingInFileNames": true, // Gross-/Kleinschreibung bei Dateinamen
+    "importHelpers": true, // "emit helper" aus tslib verwenden
+    "inlineSourceMap": true, // "source maps" nicht in einer separaten Datei
+    "inlineSources": true, // Quellcode zusammen mit den "source maps"
+    "noErrorTruncation": true,
+    "noFallthroughCasesInSwitch": false, // "break" muss bei switch vorhanden sein
+    "noImplicitAny": false, // Fehler bei implizitem Typ "any"
+    "noImplicitOverride": false, // Schluesselwort "override"
+    "noImplicitReturns": false, // bei jedem Code-Pfad muss es "return" geben
+    "noImplicitThis": false, // Fehler bei this mit implizitem "any"
+    "noUncheckedIndexedAccess": false, // undefined bei Resultaten fuer Indey-signaturen
+    "noUnusedLocals": false, // keine nicht-benutzen lokalen Variable
+    "noUnusedParameters": false, // keine nicht-benutzen Parameter
+    "preserveWatchOutput": true,
+    "removeComments": false, // Kommentare im JS-Code
+    "skipLibCheck": true, // keine Typ-Pruefungen in .d.ts-Dateien
+    "strict": false, // alle "strict"-Optionen aktivieren
+    "useUnknownInCatchVariables": true, // unknown als default-Typ bei catch-Klauseln
+
+    "lib": [
+      "ES5",
+      "ES2015",
+      "ES2016",
+      "ES2017",
+      "ES2018",
+      "ES2019",
+      "ES2020",
+      "dom"
+    ]
+  },
+  "exclude": ["dist", "node_modules", "temp"]
 }
