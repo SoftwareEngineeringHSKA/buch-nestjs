@@ -23,8 +23,10 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import type MUUID from 'uuid-mongodb';
+import type { ObjectID } from 'bson';
 import { dbConfig } from '../config';
+import mongoose from 'mongoose';
+
 
 /**
  * Alias-Typ für gültige Strings bei Verlagen.
@@ -36,10 +38,9 @@ export type Verlag = 'BAR_VERLAG' | 'FOO_VERLAG';
  */
 export type BuchArt = 'DRUCKAUSGABE' | 'KINDLE';
 
-/**
- * Nutzdaten im Anwendungskern.
- */
-export type BuchDocument = Buch & Document;
+
+// Document: _id (vom Type ObjectID) und __v als Attribute
+export type BuchDocument = Buch & mongoose.Document<ObjectID, any, Buch>;
 
 // Mongoose Schema mit NestJS
 // https://docs.nestjs.com/techniques/mongodb#model-injection
@@ -62,9 +63,7 @@ const MONGOOSE_OPTIONS = {
 // Das Schema für Mongoose kann hier mit dem Decorator @Schema direkt aus der Klasse erzeugt werden.
 @Schema(MONGOOSE_OPTIONS)
 export class Buch {
-    _id?: MUUID.MUUID | string; // eslint-disable-line @typescript-eslint/naming-convention
 
-    readonly __v?: number; // eslint-disable-line @typescript-eslint/naming-convention
 
     // https://docs.nestjs.com/techniques/mongodb#model-injection
     // https://mongoosejs.com/docs/schematypes.html

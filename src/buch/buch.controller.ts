@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Body, Get, Post } from '@nestjs/common';
+import { Body, Get, Param, Post, Req, Res } from '@nestjs/common';
 
 import { Buch } from './buch';
 import { BuchService } from './buch.service';
@@ -37,4 +37,14 @@ export class BuchController {
 
         return this.buchService.findAll();
     }
+
+	@Get(':id')
+	async findById(@Param("id") id:string,
+) {
+    // @Req() req: Request,
+    // @Res() res: Response
+		logger.debug("BuchController.findById()", id);
+
+		return this.buchService.findById(id)
+	}
 }

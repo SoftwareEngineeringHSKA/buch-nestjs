@@ -26,6 +26,7 @@ import { Model } from "mongoose";
 import MUUID from 'uuid-mongodb';
 import { Buch } from "../buch/buch";
 import { logger } from '../shared/logger';
+import type { ObjectID } from 'bson';
 
 @Injectable()
 export class DbService {
@@ -38,7 +39,7 @@ export class DbService {
 /* eslint-disable @typescript-eslint/naming-convention */
 private readonly testdaten: Buch[] = [
     {
-        _id: MUUID.from('00000000-0000-0000-0000-000000000001'),
+        // id: new ObjectID('00000000-0000-0000-0000-000000000001'),
         titel: 'Alpha',
         rating: 4,
         art: 'DRUCKAUSGABE',
@@ -61,10 +62,10 @@ private readonly testdaten: Buch[] = [
                 vorname: 'Alfred',
             },
         ],
-        __v: 0,
+        // __v: 0,
     },
     {
-        _id: MUUID.from('00000000-0000-0000-0000-000000000002'),
+        // _id: MUUID.from('00000000-0000-0000-0000-000000000002'),
         titel: 'Beta',
         rating: 2,
         art: 'KINDLE',
@@ -82,10 +83,10 @@ private readonly testdaten: Buch[] = [
                 vorname: 'Brunhilde',
             },
         ],
-        __v: 0,
+        // __v: 0,
     },
     {
-        _id: MUUID.from('00000000-0000-0000-0000-000000000003'),
+        // _id: MUUID.from('00000000-0000-0000-0000-000000000003'),
         titel: 'Gamma',
         rating: 1,
         art: 'DRUCKAUSGABE',
@@ -103,10 +104,10 @@ private readonly testdaten: Buch[] = [
                 vorname: 'Claus',
             },
         ],
-        __v: 0,
+        // __v: 0,
     },
     {
-        _id: MUUID.from('00000000-0000-0000-0000-000000000004'),
+        // _id: MUUID.from('00000000-0000-0000-0000-000000000004'),
         titel: 'Delta',
         rating: 3,
         art: 'DRUCKAUSGABE',
@@ -124,10 +125,10 @@ private readonly testdaten: Buch[] = [
                 vorname: 'Dieter',
             },
         ],
-        __v: 0,
+        // __v: 0,
     },
     {
-        _id: MUUID.from('00000000-0000-0000-0000-000000000005'),
+        // _id: MUUID.from('00000000-0000-0000-0000-000000000005'),
         titel: 'Epsilon',
         rating: 2,
         art: 'KINDLE',
@@ -145,7 +146,7 @@ private readonly testdaten: Buch[] = [
                 vorname: 'Elfriede',
             },
         ],
-        __v: 0,
+        // __v: 0,
     },
 ];
 /* eslint-enable @typescript-eslint/naming-convention */
@@ -170,6 +171,11 @@ async populateDB () {
     );
 
     const insertedDocs = await this.buchModel.insertMany(this.testdaten, { lean: true });
+    // this.testdaten.forEach(
+    //     data => {
+    //         logger.debug(data._id)
+    //     }
+    // )
     logger.warn('%d Datensaetze wurden eingefuegt.', insertedDocs.length);
 };
 }

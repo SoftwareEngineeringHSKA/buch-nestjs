@@ -101,8 +101,6 @@ const dbConfigLog = {
     autoIndex,
     dbPopulate,
     dbPopulateFiles,
-    user,
-    pass,
 };
 
 console.info('dbConfig: %o', dbConfigLog);
