@@ -50,12 +50,12 @@ export class BuchController {
     // Wird aufgerufen, wenn ein GET-Request über den im Controller angegebenen Pfad eintrifft.
     // Kann auch mit Parametern befüllt werden um z.B. ein GET-Request weiter zu flitern
     // Bsp. @Get('id') -> localhost/buch/id
-    @Get('')
-    async findAll(): Promise<Buch[]> {
-        logger.debug('BuchController.findAll()');
+    // @Get()
+    // async findAll(): Promise<Buch[]> {
+    //     logger.debug('BuchController.findAll()');
 
-        return this.buchService.findAll();
-    }
+    //     return this.buchService.findAll();
+    // }
 
     /**
      * Bücher werden mit Query-Parametern asynchron gesucht. Falls es mindestens
