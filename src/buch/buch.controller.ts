@@ -31,22 +31,11 @@ import { BuchService } from './buch.service';
 // dann werden eingehende Requests direkt über den "Root-Pfad" des Hosts geroutet. Bsp. localhost/
 // Übergibt man dem Controller einen String wie bspw. @Controller('buch'),
 // dann werden die Requests über folgenden Pfad geleitet: localhost/buch
-@Controller('buecher')
+@Controller('api/buecher')
 export class BuchController {
     // Dependency Injection
     // Hier wird der BuchService in den BuchController eingebunden
     constructor(private readonly buchService: BuchService) {}
-
-    // @Get ist ein Decorator von NestJS
-    // Wird aufgerufen, wenn ein GET-Request über den im Controller angegebenen Pfad eintrifft.
-    // Kann auch mit Parametern befüllt werden um z.B. ein GET-Request weiter zu flitern
-    // Bsp. @Get('id') -> localhost/buch/id
-    @Get('/api')
-    async findAll(): Promise<Buch[]> {
-        logger.debug('BuchController.findAll()');
-
-        return this.buchService.findAll();
-    }
 
     @Get(':id')
     async findById(@Param('id') id: string) {
@@ -55,6 +44,17 @@ export class BuchController {
         logger.debug('BuchController.findById()', id);
 
         return this.buchService.findById(id);
+    }
+
+    // @Get ist ein Decorator von NestJS
+    // Wird aufgerufen, wenn ein GET-Request über den im Controller angegebenen Pfad eintrifft.
+    // Kann auch mit Parametern befüllt werden um z.B. ein GET-Request weiter zu flitern
+    // Bsp. @Get('id') -> localhost/buch/id
+    @Get('')
+    async findAll(): Promise<Buch[]> {
+        logger.debug('BuchController.findAll()');
+
+        return this.buchService.findAll();
     }
 
     /**
