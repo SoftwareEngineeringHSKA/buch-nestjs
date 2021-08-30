@@ -6,12 +6,14 @@ import { DbService } from './db/db.service';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { dbConfig } from './config/db';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
     // Module
     // Andere Module können hier zum "Hauptmodul" hinzugefügt und somit verbunden werden.
     // Module können bspw. Features oder Produkte des Projekts sein. Hier etwa "Buch".
-    imports: [MongooseModule.forRoot(dbConfig.url), BuchModule, DbModule],
+    imports: [MongooseModule.forRoot(dbConfig.url), BuchModule, DbModule, AuthModule, UsersModule],
 
     // Controller
     // Controller sind verantwortlich für einkommende Requests und passende Responses.
