@@ -17,7 +17,7 @@
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": false, // "break" muss bei switch vorhanden sein
     "noImplicitAny": false, // Fehler bei implizitem Typ "any"
-    "noImplicitOverride": false, // Schluesselwort "override"
+    "noImplicitOverride": true, // Schluesselwort "override"
     "noImplicitReturns": false, // bei jedem Code-Pfad muss es "return" geben
     "noImplicitThis": false, // Fehler bei this mit implizitem "any"
     "noUncheckedIndexedAccess": false, // undefined bei Resultaten fuer Indey-signaturen

@@ -16,11 +16,25 @@
  */
 
 /**
- * Das Modul enthält allgemeine Objekte, Funktionen und Typen für den
- * Appserver, z.B. für den DB-Zugriff oder für die Konfiguration.
+ * Das Modul enthält die Funktion, um die Basis-URI für die REST-Schnittstelle
+ * zu liefern.
  * @packageDocumentation
  */
 
-export * from './base-uri';
-export * from './logger';
-// export * from './request-handler';
+import { Cloud, cloud, nodeConfig } from '../config';
+import type { Request } from 'express';
+
+const port = cloud === undefined ? `:${nodeConfig.port}` : '';
+
+/**
+ * die Funktion, um die Basis-URI für die REST--Schnittstelle zu liefern, z.B.
+ * für Atom-Links bei HATEOAS oder für den Location-Header.
+ *
+ * @param req Request-Objekt von Express
+ * @returns Die Basis-URI als `string`
+ */
+export const getBaseUri = (req: Request) => {
+    const { protocol, hostname, baseUrl } = req;
+    const schema = cloud === Cloud.HEROKU ? 'https' : protocol;
+    return `${schema}://${hostname}${port}${baseUrl}`;
+};

@@ -21,98 +21,110 @@
  * @packageDocumentation
  */
 
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
-import type { ObjectID } from 'bson';
-import { dbConfig } from '../config';
+import type {ObjectID} from 'bson';
+import {dbConfig} from '../config';
 import mongoose from 'mongoose';
 
 
 /**
  * Alias-Typ für gültige Strings bei Verlagen.
  */
-export type Verlag = 'BAR_VERLAG' | 'FOO_VERLAG';
+export type Verlag = 'BAR_VERLAG'|'FOO_VERLAG';
 
 /**
  * Alias-Typ für gültige Strings bei der Art eines Buches.
  */
-export type BuchArt = 'DRUCKAUSGABE' | 'KINDLE';
+export type BuchArt = 'DRUCKAUSGABE'|'KINDLE';
 
 
 // Document: _id (vom Type ObjectID) und __v als Attribute
-export type BuchDocument = Buch & mongoose.Document<ObjectID, any, Buch>;
+export type BuchDocument = Buch&mongoose.Document<ObjectID, any, Buch>;
 
 // Mongoose Schema mit NestJS
 // https://docs.nestjs.com/techniques/mongodb#model-injection
-// Schemas can be created with NestJS decorators, or with Mongoose itself manually.
-// Using decorators to create schemas greatly reduces boilerplate and improves
-// overall code readability.
+// Schemas can be created with NestJS decorators, or with Mongoose itself
+// manually. Using decorators to create schemas greatly reduces boilerplate and
+// improves overall code readability.
 
 const MONGOOSE_OPTIONS = {
-    // https://mongoosejs.com/docs/guide.html#options
-    // default: virtueller getter "id"
-    // id: true,
+  // https://mongoosejs.com/docs/guide.html#options
+  // default: virtueller getter "id"
+  // id: true,
 
-    // createdAt und updatedAt als automatisch gepflegte Felder
-    timestamps: true,
-    // http://thecodebarbarian.com/whats-new-in-mongoose-5-10-optimistic-concurrency.html
-    optimisticConcurrency: true,
-    autoIndex: dbConfig.autoIndex,
+  // createdAt und updatedAt als automatisch gepflegte Felder
+  timestamps: true,
+  // http://thecodebarbarian.com/whats-new-in-mongoose-5-10-optimistic-concurrency.html
+  optimisticConcurrency: true,
+  autoIndex: dbConfig.autoIndex,
 };
 
-// Das Schema für Mongoose kann hier mit dem Decorator @Schema direkt aus der Klasse erzeugt werden.
+// Das Schema für Mongoose kann hier mit dem Decorator @Schema direkt aus der
+// Klasse erzeugt werden.
 @Schema(MONGOOSE_OPTIONS)
 export class Buch {
+  // https://docs.nestjs.com/techniques/mongodb#model-injection
+  // https://mongoosejs.com/docs/schematypes.html
+  // The schema types for these properties are automatically inferred thanks to
+  // TypeScript metadata (and reflection) capabilities. However, in more complex
+  // scenarios in which types cannot be implicitly reflected (for example,
+  // arrays or nested object structures), types must be indicated explicitly, as
+  // follows:
+  // @Prop([String])
+  // tags: string[];
 
+  @Prop({type: String, required: true, unique: true})
+  titel: string|null|undefined;
 
-    // https://docs.nestjs.com/techniques/mongodb#model-injection
-    // https://mongoosejs.com/docs/schematypes.html
-    // The schema types for these properties are automatically inferred thanks to TypeScript
-    // metadata (and reflection) capabilities. However, in more complex scenarios in which
-    // types cannot be implicitly reflected (for example, arrays or nested object structures),
-    // types must be indicated explicitly, as follows:
-    // @Prop([String])
-    // tags: string[];
+  @Prop({type: Number, min: 0, max: 5}) readonly rating?: number|null|undefined;
 
-    @Prop({ type: String, required: true, unique: true })
-    titel: string | null | undefined;
+  @Prop({type: String, enum: ['DRUCKAUSGABE', 'KINDLE']})
+  readonly art: BuchArt|''|null|undefined;
 
-    @Prop({ type: Number, min: 0, max: 5 })
-    readonly rating?: number | null | undefined;
+  @Prop({type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG']})
+  readonly verlag: Verlag|''|null|undefined;
 
-    @Prop({ type: String, enum: ['DRUCKAUSGABE', 'KINDLE'] })
-    readonly art: BuchArt | '' | null | undefined;
+  @Prop({type: Number, required: true}) readonly preis?: number|undefined;
 
-    @Prop({ type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG'] })
-    readonly verlag: Verlag | '' | null | undefined;
+  @Prop({type: Number}) readonly rabatt?: number|undefined;
 
-    @Prop({ type: Number, required: true })
-    readonly preis?: number | undefined;
+  @Prop({type: Boolean}) readonly lieferbar?: boolean|undefined;
 
-    @Prop({ type: Number })
-    readonly rabatt?: number | undefined;
+  // das Temporal-API ab ES2022 wird von Mongoose nicht unterstuetzt
+  // hier: Temporal.PlainDate
+  // https://tc39.es/proposal-temporal/docs
+  // string bei REST und Date bei GraphQL sowie Mongoose
+  @Prop({type: String}) datum?: Date|string|undefined;
 
-    @Prop({ type: Boolean })
-    readonly lieferbar?: boolean | undefined;
+  @Prop({type: String, required: true, unique: true, immutable: true})
+  readonly isbn?: string|null|undefined;
 
-    // das Temporal-API ab ES2022 wird von Mongoose nicht unterstuetzt
-    // hier: Temporal.PlainDate
-    // https://tc39.es/proposal-temporal/docs
-    // string bei REST und Date bei GraphQL sowie Mongoose
-    @Prop({ type: String })
-    datum?: Date | string | undefined;
+  @Prop({type: String}) readonly homepage?: string|null|undefined;
 
-    @Prop({ type: String, required: true, unique: true, immutable: true })
-    readonly isbn?: string | null | undefined;
+  @Prop({type: [String], sparse: true})
+  readonly schlagwoerter?: string[]|null|undefined;
 
-    @Prop({ type: String })
-    readonly homepage?: string | null | undefined;
-
-    @Prop({ type: [String], sparse: true })
-    readonly schlagwoerter?: string[] | null | undefined;
-
-    @Prop({ type: {} })
-    readonly autoren: unknown;
+  //   @Prop({type: {}}) readonly autoren: unknown;
 }
+interface Links {
+  self: {href: string};
+  list?: {href: string};
+  add?: {href: string};
+  update?: {href: string};
+  remove?: {href: string};
+}
+
+// Interface fuer GET-Request mit Links fuer HATEOAS
+export interface BuchDTO extends Buch {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  _links: Links;
+}
+
+export interface BuecherDTO {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  _embedded: {buecher: BuchDTO[];};
+}
+
 
 export const BuchSchema = SchemaFactory.createForClass(Buch);
