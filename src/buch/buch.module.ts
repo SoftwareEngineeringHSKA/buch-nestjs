@@ -15,19 +15,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Module} from '@nestjs/common';
-import {MongooseModule} from '@nestjs/mongoose';
-
-import {BuchSchema} from './buch';
-import {BuchController} from './buch.controller';
-import {BuchService} from './buch.service';
+import { APP_GUARD } from '@nestjs/core';
+import { BuchController } from './buch.controller';
+import { BuchSchema } from './buch';
+import { BuchService } from './buch.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{name: 'Buch', schema: BuchSchema}]),
-  ],
-  controllers: [BuchController],
-  providers: [BuchService],
+    imports: [
+        MongooseModule.forFeature([{ name: 'Buch', schema: BuchSchema }]),
+    ],
+    controllers: [BuchController],
+    providers: [
+        BuchService,
+        {
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard,
+        },
+    ],
 })
-export class BuchModule {
-}
+export class BuchModule {}

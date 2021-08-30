@@ -19,6 +19,7 @@ import { Body, Get, Param, Post, Query, Req, Res } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ObjectID } from 'bson';
 import { Request, Response } from 'express';
+import { Public } from '../auth/jwt-auth.guard';
 
 import { getBaseUri, logger } from '../shared';
 
@@ -73,6 +74,7 @@ export class BuchController {
      * @param res Leeres Response-Objekt von Express.
      * @returns Leeres Promise-Objekt.
      */
+    @Public()
     @Get()
     async find(
         @Query() query: BuchQuery,
