@@ -27,6 +27,7 @@ import type {ObjectID} from 'bson';
 import {dbConfig} from '../config';
 import mongoose from 'mongoose';
 import {ApiProperty} from '@nestjs/swagger';
+import {IsIn, IsString, IsUrl} from 'class-validator';
 
 
 
@@ -86,10 +87,15 @@ export class Buch {
 
   @Prop({type: String, enum: ['DRUCKAUSGABE', 'KINDLE']})
   @ApiProperty({example: 'DRUCKAUSGABE', type: String})
+  @IsString()
+  @IsIn(['DRUCKAUSGABE', 'KINDLE'])
   readonly art: BuchArt|''|null|undefined;
 
   @Prop({type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG']})
   @ApiProperty({example: 'FOO_VERLAG', type: String})
+  @IsString()
+  @IsIn(['FOO_VERLAG', 'BAR_VERLAG'])
+
   readonly verlag: Verlag|''|null|undefined;
 
   @Prop({type: Number, required: true})
@@ -118,10 +124,12 @@ export class Buch {
 
   @Prop({type: String})
   @ApiProperty({example: 'https://acme.de/', type: String})
+  @IsUrl()
   readonly homepage?: string|null|undefined;
 
   @Prop({type: [String], sparse: true})
   @ApiProperty({example: ['JAVASCRIPT', 'TYPESCRIPT']})
+  @IsIn(['JAVASCRIPT', 'TYPESCRIPT'])
   readonly schlagwoerter?: string[]|null|undefined;
 
   //   @Prop({type: {}}) readonly autoren: unknown;
