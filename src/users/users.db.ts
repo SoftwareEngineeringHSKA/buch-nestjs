@@ -22,6 +22,7 @@
  */
 
 import {env} from '../config/env';
+import {Role} from './role.enum';
 import type {User} from './user';
 
 const {password} = env.authConfigEnv;
@@ -31,40 +32,40 @@ const {password} = env.authConfigEnv;
  * Nicht Set, weil es dafür keine Suchfunktion gibt.
  */
 export const users: User[] = [
-  {
-    id: '20000000-0000-0000-0000-000000000001',
-    username: 'admin',
-    password,
-    email: 'admin@acme.com',
-    roles: ['admin', 'mitarbeiter', 'abteilungsleiter', 'kunde'],
-  },
-  {
-    id: '20000000-0000-0000-0000-000000000002',
-    username: 'adriana.alpha',
-    password,
-    email: 'adriana.alpha@acme.com',
-    roles: ['admin', 'mitarbeiter', 'kunde'],
-  },
-  {
-    id: '20000000-0000-0000-0000-000000000003',
-    username: 'alfred.alpha',
-    password,
-    email: 'alfred.alpha@acme.com',
-    roles: ['mitarbeiter', 'kunde'],
-  },
-  {
-    id: '20000000-0000-0000-0000-000000000004',
-    username: 'antonia.alpha',
-    password,
-    email: 'antonia.alpha@acme.com',
-    roles: ['mitarbeiter', 'kunde'],
-  },
+  // {
+  //   id: '20000000-0000-0000-0000-000000000001',
+  //   username: 'admin',
+  //   password,
+  //   email: 'admin@acme.com',
+  //   roles: ['admin', 'mitarbeiter', 'abteilungsleiter', 'kunde'],
+  // },
+  // {
+  //   id: '20000000-0000-0000-0000-000000000002',
+  //   username: 'adriana.alpha',
+  //   password,
+  //   email: 'adriana.alpha@acme.com',
+  //   roles: ['admin', 'mitarbeiter', 'kunde'],
+  // },
+  // {
+  //   id: '20000000-0000-0000-0000-000000000003',
+  //   username: 'alfred.alpha',
+  //   password,
+  //   email: 'alfred.alpha@acme.com',
+  //   roles: ['mitarbeiter', 'kunde'],
+  // },
+  // {
+  //   id: '20000000-0000-0000-0000-000000000004',
+  //   username: 'antonia.alpha',
+  //   password,
+  //   email: 'antonia.alpha@acme.com',
+  //   roles: ['mitarbeiter', 'kunde'],
+  // },
   {
     id: '20000000-0000-0000-0000-000000000005',
     username: 'dirk.delta',
     password,
     email: 'dirk.delta@acme.com',
-    roles: ['kunde'],
+    roles: [Role.Admin],
   },
   {
     id: '20000000-0000-0000-0000-000000000006',

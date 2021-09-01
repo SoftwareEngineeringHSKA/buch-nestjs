@@ -23,4 +23,10 @@
 /**
  * Ein JSON-Array mit den vorhandenen Rollen.
  */
-export const roles = ['admin', 'mitarbeiter', 'abteilungsleiter', 'kunde'];
+// ['admin', 'mitarbeiter', 'abteilungsleiter', 'kunde'];
+export enum Role {
+  Admin = 'admin',
+  Mitarbeiter = 'mitarbeiter',
+  Abteilungsleiter = 'abteilungsleiter',
+  Kunde = 'kunde'
+}

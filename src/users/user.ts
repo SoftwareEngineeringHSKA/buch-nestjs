@@ -18,6 +18,7 @@
 
 import {Injectable, Logger} from '@nestjs/common';
 import safeStringify from 'fast-safe-stringify';
+import {Role} from './role.enum';
 import {users} from './users.db';
 
 /**
@@ -29,7 +30,7 @@ export interface User {
   username: string;
   password: string;
   email: string;
-  roles?: string[];
+  roles?: Role[];
 }
 
 /**
