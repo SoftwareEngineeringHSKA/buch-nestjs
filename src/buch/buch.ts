@@ -26,6 +26,8 @@ import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import type {ObjectID} from 'bson';
 import {dbConfig} from '../config';
 import mongoose from 'mongoose';
+import {ApiProperty} from '@nestjs/swagger';
+
 
 
 /**
@@ -75,34 +77,51 @@ export class Buch {
   // tags: string[];
 
   @Prop({type: String, required: true, unique: true})
+  @ApiProperty({example: 'Der Titel des Buchs', type: String})
   titel: string|null|undefined;
 
-  @Prop({type: Number, min: 0, max: 5}) readonly rating?: number|null|undefined;
+  @Prop({type: Number, min: 0, max: 5})
+  @ApiProperty({example: 0, type: Number})
+  readonly rating?: number|null|undefined;
 
   @Prop({type: String, enum: ['DRUCKAUSGABE', 'KINDLE']})
+  @ApiProperty({example: 'DRUCKAUSGABE', type: String})
   readonly art: BuchArt|''|null|undefined;
 
   @Prop({type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG']})
+  @ApiProperty({example: 'FOO_VERLAG', type: String})
   readonly verlag: Verlag|''|null|undefined;
 
-  @Prop({type: Number, required: true}) readonly preis?: number|undefined;
+  @Prop({type: Number, required: true})
+  @ApiProperty({example: 10, type: Number})
+  readonly preis?: number|undefined;
 
-  @Prop({type: Number}) readonly rabatt?: number|undefined;
+  @Prop({type: Number})
+  @ApiProperty({example: 0.2, type: Number})
+  readonly rabatt?: number|undefined;
 
-  @Prop({type: Boolean}) readonly lieferbar?: boolean|undefined;
+  @Prop({type: Boolean})
+  @ApiProperty({example: true, type: Boolean})
+  readonly lieferbar?: boolean|undefined;
 
   // das Temporal-API ab ES2022 wird von Mongoose nicht unterstuetzt
   // hier: Temporal.PlainDate
   // https://tc39.es/proposal-temporal/docs
   // string bei REST und Date bei GraphQL sowie Mongoose
-  @Prop({type: String}) datum?: Date|string|undefined;
+  @Prop({type: String})
+  @ApiProperty({example: '2021-10-01'})
+  datum?: Date|string|undefined;
 
   @Prop({type: String, required: true, unique: true, immutable: true})
+  @ApiProperty({example: '9783824404810', type: String})
   readonly isbn?: string|null|undefined;
 
-  @Prop({type: String}) readonly homepage?: string|null|undefined;
+  @Prop({type: String})
+  @ApiProperty({example: 'https://acme.de/', type: String})
+  readonly homepage?: string|null|undefined;
 
   @Prop({type: [String], sparse: true})
+  @ApiProperty({example: ['JAVASCRIPT', 'TYPESCRIPT']})
   readonly schlagwoerter?: string[]|null|undefined;
 
   //   @Prop({type: {}}) readonly autoren: unknown;
