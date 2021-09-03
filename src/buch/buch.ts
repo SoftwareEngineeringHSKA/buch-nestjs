@@ -21,29 +21,26 @@
  * @packageDocumentation
  */
 
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import type {ObjectID} from 'bson';
-import {dbConfig} from '../config';
+import type { ObjectID } from 'bson';
+import { dbConfig } from '../config';
 import mongoose from 'mongoose';
-import {ApiProperty} from '@nestjs/swagger';
-import {IsIn, IsString, IsUrl} from 'class-validator';
-
-
+import { ApiProperty } from '@nestjs/swagger';
+import { IsIn, IsString, IsUrl } from 'class-validator';
 
 /**
  * Alias-Typ für gültige Strings bei Verlagen.
  */
-export type Verlag = 'BAR_VERLAG'|'FOO_VERLAG';
+export type Verlag = 'BAR_VERLAG' | 'FOO_VERLAG';
 
 /**
  * Alias-Typ für gültige Strings bei der Art eines Buches.
  */
-export type BuchArt = 'DRUCKAUSGABE'|'KINDLE';
-
+export type BuchArt = 'DRUCKAUSGABE' | 'KINDLE';
 
 // Document: _id (vom Type ObjectID) und __v als Attribute
-export type BuchDocument = Buch&mongoose.Document<ObjectID, any, Buch>;
+export type BuchDocument = Buch & mongoose.Document<ObjectID, any, Buch>;
 
 // Mongoose Schema mit NestJS
 // https://docs.nestjs.com/techniques/mongodb#model-injection
@@ -52,106 +49,103 @@ export type BuchDocument = Buch&mongoose.Document<ObjectID, any, Buch>;
 // improves overall code readability.
 
 const MONGOOSE_OPTIONS = {
-  // https://mongoosejs.com/docs/guide.html#options
-  // default: virtueller getter "id"
-  // id: true,
+    // https://mongoosejs.com/docs/guide.html#options
+    // default: virtueller getter "id"
+    // id: true,
 
-  // createdAt und updatedAt als automatisch gepflegte Felder
-  timestamps: true,
-  // http://thecodebarbarian.com/whats-new-in-mongoose-5-10-optimistic-concurrency.html
-  optimisticConcurrency: true,
-  autoIndex: dbConfig.autoIndex,
+    // createdAt und updatedAt als automatisch gepflegte Felder
+    timestamps: true,
+    // http://thecodebarbarian.com/whats-new-in-mongoose-5-10-optimistic-concurrency.html
+    optimisticConcurrency: true,
+    autoIndex: dbConfig.autoIndex,
 };
 
 // Das Schema für Mongoose kann hier mit dem Decorator @Schema direkt aus der
 // Klasse erzeugt werden.
 @Schema(MONGOOSE_OPTIONS)
 export class Buch {
-  // https://docs.nestjs.com/techniques/mongodb#model-injection
-  // https://mongoosejs.com/docs/schematypes.html
-  // The schema types for these properties are automatically inferred thanks to
-  // TypeScript metadata (and reflection) capabilities. However, in more complex
-  // scenarios in which types cannot be implicitly reflected (for example,
-  // arrays or nested object structures), types must be indicated explicitly, as
-  // follows:
-  // @Prop([String])
-  // tags: string[];
+    // https://docs.nestjs.com/techniques/mongodb#model-injection
+    // https://mongoosejs.com/docs/schematypes.html
+    // The schema types for these properties are automatically inferred thanks to
+    // TypeScript metadata (and reflection) capabilities. However, in more complex
+    // scenarios in which types cannot be implicitly reflected (for example,
+    // arrays or nested object structures), types must be indicated explicitly, as
+    // follows:
+    // @Prop([String])
+    // tags: string[];
 
-  @Prop({type: String, required: true, unique: true})
-  @ApiProperty({example: 'Der Titel des Buchs', type: String})
-  titel: string|null|undefined;
+    @Prop({ type: String, required: true, unique: true })
+    @ApiProperty({ example: 'Neues Buch', type: String })
+    titel: string | null | undefined;
 
-  @Prop({type: Number, min: 0, max: 5})
-  @ApiProperty({example: 0, type: Number})
-  readonly rating?: number|null|undefined;
+    @Prop({ type: Number, min: 0, max: 5 })
+    @ApiProperty({ example: 0, type: Number })
+    readonly rating?: number | null | undefined;
 
-  @Prop({type: String, enum: ['DRUCKAUSGABE', 'KINDLE']})
-  @ApiProperty({example: 'DRUCKAUSGABE', type: String})
-  @IsString()
-  @IsIn(['DRUCKAUSGABE', 'KINDLE'])
-  readonly art: BuchArt|''|null|undefined;
+    @Prop({ type: String, enum: ['DRUCKAUSGABE', 'KINDLE'] })
+    @ApiProperty({ example: 'DRUCKAUSGABE', type: String })
+    @IsString()
+    @IsIn(['DRUCKAUSGABE', 'KINDLE'])
+    readonly art: BuchArt | '' | null | undefined;
 
-  @Prop({type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG']})
-  @ApiProperty({example: 'FOO_VERLAG', type: String})
-  @IsString()
-  @IsIn(['FOO_VERLAG', 'BAR_VERLAG'])
+    @Prop({ type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG'] })
+    @ApiProperty({ example: 'FOO_VERLAG', type: String })
+    @IsString()
+    @IsIn(['FOO_VERLAG', 'BAR_VERLAG'])
+    readonly verlag: Verlag | '' | null | undefined;
 
-  readonly verlag: Verlag|''|null|undefined;
+    @Prop({ type: Number, required: true })
+    @ApiProperty({ example: 10, type: Number })
+    readonly preis?: number | undefined;
 
-  @Prop({type: Number, required: true})
-  @ApiProperty({example: 10, type: Number})
-  readonly preis?: number|undefined;
+    @Prop({ type: Number })
+    @ApiProperty({ example: 0.2, type: Number })
+    readonly rabatt?: number | undefined;
 
-  @Prop({type: Number})
-  @ApiProperty({example: 0.2, type: Number})
-  readonly rabatt?: number|undefined;
+    @Prop({ type: Boolean })
+    @ApiProperty({ example: true, type: Boolean })
+    readonly lieferbar?: boolean | undefined;
 
-  @Prop({type: Boolean})
-  @ApiProperty({example: true, type: Boolean})
-  readonly lieferbar?: boolean|undefined;
+    // das Temporal-API ab ES2022 wird von Mongoose nicht unterstuetzt
+    // hier: Temporal.PlainDate
+    // https://tc39.es/proposal-temporal/docs
+    // string bei REST und Date bei GraphQL sowie Mongoose
+    @Prop({ type: String })
+    @ApiProperty({ example: '2021-10-01' })
+    datum?: Date | string | undefined;
 
-  // das Temporal-API ab ES2022 wird von Mongoose nicht unterstuetzt
-  // hier: Temporal.PlainDate
-  // https://tc39.es/proposal-temporal/docs
-  // string bei REST und Date bei GraphQL sowie Mongoose
-  @Prop({type: String})
-  @ApiProperty({example: '2021-10-01'})
-  datum?: Date|string|undefined;
+    @Prop({ type: String, required: true, unique: true, immutable: true })
+    @ApiProperty({ example: '9783641201968', type: String })
+    readonly isbn?: string | null | undefined;
 
-  @Prop({type: String, required: true, unique: true, immutable: true})
-  @ApiProperty({example: '9783824404810', type: String})
-  readonly isbn?: string|null|undefined;
+    @Prop({ type: String })
+    @ApiProperty({ example: 'https://acme.de/', type: String })
+    @IsUrl()
+    readonly homepage?: string | null | undefined;
 
-  @Prop({type: String})
-  @ApiProperty({example: 'https://acme.de/', type: String})
-  @IsUrl()
-  readonly homepage?: string|null|undefined;
+    @Prop({ type: [String], sparse: true })
+    @ApiProperty({ example: ['JAVASCRIPT', 'TYPESCRIPT'] })
+    readonly schlagwoerter?: string[] | null | undefined;
 
-  @Prop({type: [String], sparse: true})
-  @ApiProperty({example: ['JAVASCRIPT', 'TYPESCRIPT']})
-  @IsIn(['JAVASCRIPT', 'TYPESCRIPT'])
-  readonly schlagwoerter?: string[]|null|undefined;
-
-  //   @Prop({type: {}}) readonly autoren: unknown;
+    //   @Prop({type: {}}) readonly autoren: unknown;
 }
 interface Links {
-  self: {href: string};
-  list?: {href: string};
-  add?: {href: string};
-  update?: {href: string};
-  remove?: {href: string};
+    self: { href: string };
+    list?: { href: string };
+    add?: { href: string };
+    update?: { href: string };
+    remove?: { href: string };
 }
 
 // Interface fuer GET-Request mit Links fuer HATEOAS
 export interface BuchDTO extends Buch {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  _links: Links;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    _links: Links;
 }
 
 export interface BuecherDTO {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  _embedded: {buecher: BuchDTO[];};
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    _embedded: { buecher: BuchDTO[] };
 }
-
 
 export const BuchSchema = SchemaFactory.createForClass(Buch);
