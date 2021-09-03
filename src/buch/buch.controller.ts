@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 /*
  * Copyright (C) 2021 - present Juergen Zimmermann, Hochschule Karlsruhe
  *
@@ -38,7 +39,7 @@ import { ObjectID } from 'bson';
 import { Request, Response } from 'express';
 
 import { Public } from '../auth/jwt-auth.guard';
-import { getBaseUri, logger } from '../shared';
+import { getBaseUri } from '../shared';
 
 import { Buch, BuchDocument, BuchDTO, BuecherDTO } from './buch';
 import { BuchQuery } from './buch.query';
@@ -64,9 +65,13 @@ import {
 @ApiBearerAuth('token')
 @Controller('api/buecher')
 export class BuchController {
+    readonly #logger: Logger;
+
     // Dependency Injection
     // Hier wird der BuchService in den BuchController eingebunden
-    constructor(private readonly buchService: BuchService) {}
+    constructor(private readonly buchService: BuchService) {
+        this.#logger = new Logger(BuchController.name);
+    }
 
     // ==========================================
     // ================= CREATE =================
@@ -96,7 +101,7 @@ export class BuchController {
         @Req() req: Request,
         @Res() res: Response,
     ) {
-        logger.debug(`create: buch=${buch}`);
+        this.#logger.debug(`create: buch=${buch}`);
 
         const result = await this.buchService.create(buch);
         if (result instanceof BuchServiceError) {
@@ -105,7 +110,7 @@ export class BuchController {
         }
 
         const location = `${getBaseUri(req)}/${result}`;
-        logger.debug(`create: location=${location}`);
+        this.#logger.debug(`create: location=${location}`);
         res.location(location).send();
     }
 
@@ -117,7 +122,7 @@ export class BuchController {
     async findById(@Param('id') id: string) {
         // @Req() req: Request,
         // @Res() res: Response
-        logger.debug('BuchController.findById()', id);
+        this.#logger.debug('BuchController.findById()', id);
 
         return this.buchService.findById(id);
     }
@@ -145,10 +150,10 @@ export class BuchController {
         @Req() req: Request,
         @Res() res: Response,
     ) {
-        logger.debug(`find: query=${query}`);
+        this.#logger.debug(`find: query=${query}`);
 
         const buecher = await this.buchService.find(query);
-        logger.debug(`find: ${buecher}`);
+        this.#logger.debug(`find: ${buecher}`);
 
         // HATEOAS: Atom Links je Buch
         const buecherDTO = buecher.map((buch) => {
@@ -156,7 +161,7 @@ export class BuchController {
             // @typescript-eslint/no-base-to-string
             return this.toDTO(buch, req, id, false);
         });
-        logger.debug(`find: buecherDTO=${buecherDTO}`);
+        this.#logger.debug(`find: buecherDTO=${buecherDTO}`);
 
         const result: BuecherDTO = { _embedded: { buecher: buecherDTO } };
 
@@ -185,17 +190,17 @@ export class BuchController {
         description: 'Das Buch wurde gelöscht oder war nicht vorhanden',
     })
     async delete(@Param('id') id: string, @Res() res: Response) {
-        logger.debug(`delete: id=${id}`);
+        this.#logger.debug(`delete: id=${id}`);
 
         let deleted: boolean;
         try {
             deleted = await this.buchService.delete(id);
         } catch (err: unknown) {
-            logger.error(`delete: error=${err}`);
+            this.#logger.error(`delete: error=${err}`);
             res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
             return;
         }
-        logger.debug(`delete: deleted=${deleted}`);
+        this.#logger.debug(`delete: deleted=${deleted}`);
 
         res.sendStatus(HttpStatus.NO_CONTENT);
     }
@@ -209,7 +214,7 @@ export class BuchController {
     // eslint-disable-next-line max-params
     private toDTO(buch: BuchDocument, req: Request, id: string, all = true) {
         const baseUri = getBaseUri(req);
-        logger.debug(`#toDTO: baseUri=${baseUri}`);
+        this.#logger.debug(`#toDTO: baseUri=${baseUri}`);
         const links = all
             ? {
                   self: { href: `${baseUri}/${id}` },
@@ -220,7 +225,7 @@ export class BuchController {
               }
             : { self: { href: `${baseUri}/${id}` } };
 
-        logger.debug(`#toDTO: buch=${buch}, links=${links}`);
+        this.#logger.debug(`#toDTO: buch=${buch}, links=${links}`);
         const buchDTO: BuchDTO = {
             titel: buch.titel,
             rating: buch.rating,
@@ -255,13 +260,13 @@ export class BuchController {
     }
 
     private handleValidationError(messages: readonly string[], res: Response) {
-        logger.debug(`#handleValidationError: messages=${messages}`);
+        this.#logger.debug(`#handleValidationError: messages=${messages}`);
         res.status(HttpStatus.BAD_REQUEST).send(messages);
     }
 
     private handleTitelExists(titel: string | null | undefined, res: Response) {
         const msg = `Der Titel "${titel}" existiert bereits.`;
-        logger.debug(`#handleTitelExists(): msg=${msg}`);
+        this.#logger.debug(`#handleTitelExists(): msg=${msg}`);
         res.status(HttpStatus.BAD_REQUEST)
             .set('Content-Type', 'text/plain')
             .send(msg);
@@ -269,7 +274,7 @@ export class BuchController {
 
     private handleIsbnExists(isbn: string | null | undefined, res: Response) {
         const msg = `Die ISBN-Nummer "${isbn}" existiert bereits.`;
-        logger.debug(`#handleIsbnExists(): msg=${msg}`);
+        this.#logger.debug(`#handleIsbnExists(): msg=${msg}`);
         res.status(HttpStatus.BAD_REQUEST)
             .set('Content-Type', 'text/plain')
             .send(msg);
@@ -284,7 +289,7 @@ export class BuchController {
         if (err instanceof BuchNotExists) {
             const { id } = err;
             const msg = `Es gibt kein Buch mit der ID "${id}".`;
-            logger.debug(`#handleUpdateError: msg=${msg}`);
+            this.#logger.debug(`#handleUpdateError: msg=${msg}`);
             res.status(HttpStatus.PRECONDITION_FAILED)
                 .set('Content-Type', 'text/plain')
                 .send(msg);
@@ -299,7 +304,7 @@ export class BuchController {
         if (err instanceof VersionInvalid) {
             const { version } = err;
             const msg = `Die Versionsnummer "${version}" ist ungueltig.`;
-            logger.debug(`#handleUpdateError: msg=${msg}`);
+            this.#logger.debug(`#handleUpdateError: msg=${msg}`);
             res.status(HttpStatus.PRECONDITION_FAILED)
                 .set('Content-Type', 'text/plain')
                 .send(msg);
@@ -309,7 +314,7 @@ export class BuchController {
         if (err instanceof VersionOutdated) {
             const { version } = err;
             const msg = `Die Versionsnummer "${version}" ist nicht aktuell.`;
-            logger.debug(`#handleUpdateError: msg=${msg}`);
+            this.#logger.debug(`#handleUpdateError: msg=${msg}`);
             res.status(HttpStatus.PRECONDITION_FAILED)
                 .set('Content-Type', 'text/plain')
                 .send(msg);

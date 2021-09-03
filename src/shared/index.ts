@@ -22,5 +22,5 @@
  */
 
 export * from './base-uri';
-export * from './logger';
+// export * from './logger';
 // export * from './request-handler';

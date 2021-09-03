@@ -21,9 +21,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "ajv": "8.6.2",
-    "ajv-errors": "3.0.0",
-    "ajv-formats": "2.1.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/jwt": "^8.0.0",
@@ -31,9 +28,13 @@
     "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.0.9",
+    "ajv": "8.6.2",
+    "ajv-errors": "3.0.0",
+    "ajv-formats": "2.1.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "10.0.0",
+    "fast-safe-stringify": "^2.0.8",
     "helmet": "^4.6.0",
     "mongoose": "^5.13.5",
     "passport": "^0.4.1",
