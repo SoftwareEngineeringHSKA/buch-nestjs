@@ -15,33 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Module} from '@nestjs/common';
-import {APP_GUARD} from '@nestjs/core';
-import {MongooseModule} from '@nestjs/mongoose';
+import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { MongooseModule } from '@nestjs/mongoose';
 
-import {JwtAuthGuard} from '../auth/jwt-auth.guard';
-import {RolesGuard} from '../users/roles.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../users/roles.guard';
 
-import {BuchSchema} from './buch';
-import {BuchController} from './buch.controller';
-import {BuchService} from './buch.service';
+import { BuchSchema } from './buch';
+import { BuchController } from './buch.controller';
+import { BuchService } from './buch.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{name: 'Buch', schema: BuchSchema}]),
-  ],
-  controllers: [BuchController],
-  providers: [
-    BuchService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-  ],
+    imports: [
+        MongooseModule.forFeature([{ name: 'Buch', schema: BuchSchema }]),
+    ],
+    controllers: [BuchController],
+    providers: [
+        BuchService,
+        {
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
+        },
+    ],
 })
-export class BuchModule {
-}
+export class BuchModule {}

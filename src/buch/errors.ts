@@ -33,73 +33,77 @@ export class BuchServiceError {}
  * `msg` gekapselt.
  */
 export class BuchInvalid extends BuchServiceError {
-  // Parameter Properties
-  constructor(readonly messages: string[]) {
-    super();
-  }
+    // Parameter Properties
+    constructor(readonly messages: string[]) {
+        super();
+    }
 }
 
 /**
  * Klasse für einen bereits existierenden Titel.
  */
 export class TitelExists extends BuchServiceError {
-  constructor(
-      readonly titel: string|null|undefined,
-      readonly id?: string,
-  ) {
-    super();
-  }
+    constructor(
+        readonly titel: string | null | undefined,
+        readonly id?: string,
+    ) {
+        super();
+    }
 }
 
 /**
  * Klasse für eine bereits existierende ISBN-Nummer.
  */
 export class IsbnExists extends BuchServiceError {
-  constructor(
-      readonly isbn: string|null|undefined,
-      readonly id?: string,
-  ) {
-    super();
-  }
+    constructor(
+        readonly isbn: string | null | undefined,
+        readonly id?: string,
+    ) {
+        super();
+    }
 }
 
 /**
  * Union-Type für Fehler beim Neuanlegen eines Buches.
  */
-export type CreateError = BuchInvalid|IsbnExists|TitelExists;
+export type CreateError = BuchInvalid | IsbnExists | TitelExists;
 
 /**
  * Klasse für eine ungültige Versionsnummer beim Ändern.
  */
 export class VersionInvalid extends BuchServiceError {
-  constructor(readonly version: string|undefined) {
-    super();
-  }
+    constructor(readonly version: string | undefined) {
+        super();
+    }
 }
 
 /**
  * Klasse für eine veraltete Versionsnummer beim Ändern.
  */
 export class VersionOutdated extends BuchServiceError {
-  constructor(readonly id: string, readonly version: number) {
-    super();
-  }
+    constructor(readonly id: string, readonly version: number) {
+        super();
+    }
 }
 
 /**
  * Klasse für ein nicht-vorhandenes Buch beim Ändern.
  */
 export class BuchNotExists extends BuchServiceError {
-  constructor(readonly id: string|undefined) {
-    super();
-  }
+    constructor(readonly id: string | undefined) {
+        super();
+    }
 }
 
 /**
  * Union-Type für Fehler beim Ändern eines Buches.
  */
 export type UpdateError =
-    |BuchInvalid|BuchNotExists|TitelExists|VersionInvalid|VersionOutdated;
+    | BuchInvalid
+    | BuchNotExists
+    | TitelExists
+    | VersionInvalid
+    | VersionOutdated;
 
 /**
  * Allgemeine Basisklasse für {@linkcode BuchFileService}
@@ -110,23 +114,23 @@ export class BuchFileServiceError {}
  * Klasse für eine nicht-vorhandenes Binärdatei.
  */
 export class FileNotFound extends BuchFileServiceError {
-  constructor(readonly filename: string) {
-    super();
-  }
+    constructor(readonly filename: string) {
+        super();
+    }
 }
 
 /**
  * Klasse, falls es mehrere Binärdateien zu einem Buch gibt.
  */
 export class MultipleFiles extends BuchFileServiceError {
-  constructor(readonly filename: string) {
-    super();
-  }
+    constructor(readonly filename: string) {
+        super();
+    }
 }
 
 /**
  * Union-Type für Fehler beim Lesen eines Buches.
  */
-export type DownloadError = BuchNotExists|FileNotFound|MultipleFiles;
+export type DownloadError = BuchNotExists | FileNotFound | MultipleFiles;
 
 /* eslint-enable max-classes-per-file */
