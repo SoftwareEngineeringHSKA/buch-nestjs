@@ -1,22 +1,51 @@
+import { users } from './users.db';
+import safeStringify from 'fast-safe-stringify';
+/*
+ * Copyright (C) 2021 - present Juergen Zimmermann, Hochschule Karlsruhe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
-import {Reflector} from '@nestjs/core';
-import {Role} from './role.enum';
-import {ROLES_KEY} from './roles.decorator';
+import {
+    CanActivate,
+    ExecutionContext,
+    Injectable,
+    Logger,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Role } from './role.enum';
+import { ROLES_KEY } from './roles.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+    readonly #logger: Logger;
 
-  canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    if (!requiredRoles) {
-      return true;
+    constructor(private reflector: Reflector) {
+        this.#logger = new Logger(RolesGuard.name);
     }
-    const {user} = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.roles?.includes(role));
-  }
+
+    canActivate(context: ExecutionContext): boolean {
+        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(
+            ROLES_KEY,
+            [context.getHandler(), context.getClass()],
+        );
+        if (!requiredRoles) {
+            return true;
+        }
+        const { user } = context.switchToHttp().getRequest();
+        this.#logger.log(safeStringify(requiredRoles));
+        this.#logger.log(safeStringify(user));
+        return requiredRoles.some((role) => user.roles?.includes(role));
+    }
 }

@@ -1,11 +1,13 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { jwtConstants } from './constants';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+    readonly #logger: Logger;
+
     constructor() {
         // Available options for jwt configuration:
         // https://github.com/mikenicholson/passport-jwt#configure-strategy
@@ -21,9 +23,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             // for signing the token.Other options, such as a PEM- encoded public key, may be more appropriate for
             // production apps.In any case, as cautioned earlier, do not expose this secret publicly.
         });
+
+        this.#logger = new Logger(JwtStrategy.name);
     }
 
     async validate(payload: any) {
-        return { userId: payload.sub, username: payload.username };
+        this.#logger.debug(payload);
+        return {
+            userId: payload.sub,
+            username: payload.username,
+            roles: payload.roles,
+        };
     }
 }

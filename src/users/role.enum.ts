@@ -25,8 +25,8 @@
  */
 // ['admin', 'mitarbeiter', 'abteilungsleiter', 'kunde'];
 export enum Role {
-  Admin = 'admin',
-  Mitarbeiter = 'mitarbeiter',
-  Abteilungsleiter = 'abteilungsleiter',
-  Kunde = 'kunde'
+    Admin = 'admin',
+    Mitarbeiter = 'mitarbeiter',
+    Abteilungsleiter = 'abteilungsleiter',
+    Kunde = 'kunde',
 }

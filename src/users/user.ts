@@ -16,21 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Logger} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import safeStringify from 'fast-safe-stringify';
-import {Role} from './role.enum';
-import {users} from './users.db';
+import { Role } from './role.enum';
+import { users } from './users.db';
 
 /**
  * Das Interface `User` beschreibt die Properties zu einer vorhandenen
  * Benutzerkennung.
  */
 export interface User {
-  id: string;
-  username: string;
-  password: string;
-  email: string;
-  roles?: Role[];
+    id: string;
+    username: string;
+    password: string;
+    email: string;
+    roles?: Role[];
 }
 
 /**
@@ -39,43 +39,43 @@ export interface User {
  */
 @Injectable()
 export class UserService {
-  readonly #logger = new Logger(UserService.name);
+    readonly #logger = new Logger(UserService.name);
 
-  constructor() {
-    this.#logger.log(`users=${safeStringify(users)}`);
-  }
+    constructor() {
+        this.#logger.log(`users=${safeStringify(users)}`);
+    }
 
-  /**
-   * Ein {@linkcode User} wird anhand seines Benutzernamens gesucht.
-   *
-   * @param username Benutzername.
-   * @return Ein Objekt vom Typ {@linkcode User}, falls es einen Benutzer
-   *  mit dem angegebenen Benutzernamen gibt. Sonst `undefined`.
-   */
-  async findByUsername(username: string) {
-    return users.find((u: User) => u.username === username);
-  }
+    /**
+     * Ein {@linkcode User} wird anhand seines Benutzernamens gesucht.
+     *
+     * @param username Benutzername.
+     * @return Ein Objekt vom Typ {@linkcode User}, falls es einen Benutzer
+     *  mit dem angegebenen Benutzernamen gibt. Sonst `undefined`.
+     */
+    async findByUsername(username: string) {
+        return users.find((u: User) => u.username === username);
+    }
 
-  /**
-   * Ein {@linkcode User} wird anhand seiner ID gesucht.
-   *
-   * @param id ID des gesuchten Benutzers.
-   * @return Ein Objekt vom Typ {@linkcode User}, falls es einen Benutzer
-   *  mit der angegebenen ID gibt. Sonst `undefined`.
-   */
-  async findById(id: string|undefined) {
-    return users.find((user: User) => user.id === id);
-  }
+    /**
+     * Ein {@linkcode User} wird anhand seiner ID gesucht.
+     *
+     * @param id ID des gesuchten Benutzers.
+     * @return Ein Objekt vom Typ {@linkcode User}, falls es einen Benutzer
+     *  mit der angegebenen ID gibt. Sonst `undefined`.
+     */
+    async findById(id: string | undefined) {
+        return users.find((user: User) => user.id === id);
+    }
 
-  /**
-   * Ein {@linkcode User} wird anhand seiner Emailadresse gesucht.
-   *
-   * @param email Emailadresse.
-   * @return Ein Objekt vom Typ {@linkcode User}, falls es einen Benutzer
-   *  mit der angegebenen Emailadresse gibt. Sonst `undefined`.
-   */
-  async findByEmail(email: string) {
-    return users.find((user: User) => user.email === email);
-  }
+    /**
+     * Ein {@linkcode User} wird anhand seiner Emailadresse gesucht.
+     *
+     * @param email Emailadresse.
+     * @return Ein Objekt vom Typ {@linkcode User}, falls es einen Benutzer
+     *  mit der angegebenen Emailadresse gibt. Sonst `undefined`.
+     */
+    async findByEmail(email: string) {
+        return users.find((user: User) => user.email === email);
+    }
 }
 /* eslint-enable @typescript-eslint/require-await */

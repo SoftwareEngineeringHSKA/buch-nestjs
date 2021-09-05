@@ -41,6 +41,8 @@ import { Request, Response } from 'express';
 
 import { Public } from '../auth/jwt-auth.guard';
 import { getBaseUri } from '../shared';
+import { Role } from '../users/role.enum';
+import { Roles } from '../users/roles.decorator';
 
 import { Buch, BuchDocument, BuchDTO, BuecherDTO } from './buch';
 import { BuchQuery } from './buch.query';
@@ -95,6 +97,7 @@ export class BuchController {
      * @returns Leeres Promise-Objekt.
      */
     @Post()
+    @Roles(Role.Admin)
     @ApiOperation({ summary: 'Ein neues Buch anlegen' })
     @ApiCreatedResponse({ description: 'Erfolgreich neu angelegt' })
     @ApiBadRequestResponse({ description: 'Fehlerhafte Buchdaten' })
