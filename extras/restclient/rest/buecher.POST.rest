@@ -41,7 +41,7 @@ Authorization: Bearer {{login.response.body.$.token}}
 ### Neues Buch mit ungueltigen Daten anlegen
 POST {{restUrl}}
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.token}}
+daAuthorization: Bearer {{login.response.body.$.token}}
 
 < .\json\buch-neu-invalid.json
 

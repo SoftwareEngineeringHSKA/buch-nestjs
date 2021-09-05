@@ -1,6 +1,10 @@
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBasicAuth, ApiBearerAuth } from '@nestjs/swagger';
+import {
+    ApiBasicAuth,
+    ApiBearerAuth,
+    ApiExcludeEndpoint,
+} from '@nestjs/swagger';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
@@ -8,6 +12,7 @@ import { JwtAuthGuard, Public } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 
 @ApiBearerAuth('token')
+@ApiBasicAuth()
 @Controller()
 export class AppController {
     constructor(
@@ -17,6 +22,7 @@ export class AppController {
 
     @UseGuards(LocalAuthGuard)
     @Public()
+    @ApiExcludeEndpoint()
     @Post('auth/login')
     @ApiBasicAuth()
     async login(@Request() req) {
@@ -24,6 +30,7 @@ export class AppController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @ApiExcludeEndpoint()
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;

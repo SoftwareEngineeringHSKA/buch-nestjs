@@ -26,7 +26,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import type { ObjectID } from 'bson';
 import { dbConfig } from '../config';
 import mongoose from 'mongoose';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsIn, IsString, IsUrl } from 'class-validator';
 
 /**
@@ -75,35 +75,31 @@ export class Buch {
     // tags: string[];
 
     @Prop({ type: String, required: true, unique: true })
-    @ApiProperty({ example: 'Neues Buch', type: String })
+    @ApiPropertyOptional({ example: 'Neues Buch', type: String })
     titel: string | null | undefined;
 
     @Prop({ type: Number, min: 0, max: 5 })
-    @ApiProperty({ example: 0, type: Number })
+    @ApiPropertyOptional({ example: 0, type: Number })
     readonly rating?: number | null | undefined;
 
     @Prop({ type: String, enum: ['DRUCKAUSGABE', 'KINDLE'] })
-    @ApiProperty({ example: 'DRUCKAUSGABE', type: String })
-    @IsString()
-    @IsIn(['DRUCKAUSGABE', 'KINDLE'])
+    @ApiPropertyOptional({ example: 'DRUCKAUSGABE', type: String })
     readonly art: BuchArt | '' | null | undefined;
 
     @Prop({ type: String, required: true, enum: ['FOO_VERLAG', 'BAR_VERLAG'] })
-    @ApiProperty({ example: 'FOO_VERLAG', type: String })
-    @IsString()
-    @IsIn(['FOO_VERLAG', 'BAR_VERLAG'])
+    @ApiPropertyOptional({ example: 'FOO_VERLAG', type: String })
     readonly verlag: Verlag | '' | null | undefined;
 
     @Prop({ type: Number, required: true })
-    @ApiProperty({ example: 10, type: Number })
+    @ApiPropertyOptional({ example: 10, type: Number })
     readonly preis?: number | undefined;
 
     @Prop({ type: Number })
-    @ApiProperty({ example: 0.2, type: Number })
+    @ApiPropertyOptional({ example: 0.2, type: Number })
     readonly rabatt?: number | undefined;
 
     @Prop({ type: Boolean })
-    @ApiProperty({ example: true, type: Boolean })
+    @ApiPropertyOptional({ example: true, type: Boolean })
     readonly lieferbar?: boolean | undefined;
 
     // das Temporal-API ab ES2022 wird von Mongoose nicht unterstuetzt
@@ -111,20 +107,19 @@ export class Buch {
     // https://tc39.es/proposal-temporal/docs
     // string bei REST und Date bei GraphQL sowie Mongoose
     @Prop({ type: String })
-    @ApiProperty({ example: '2021-10-01' })
+    @ApiPropertyOptional({ example: '2021-10-01' })
     datum?: Date | string | undefined;
 
     @Prop({ type: String, required: true, unique: true, immutable: true })
-    @ApiProperty({ example: '9783641201968', type: String })
+    @ApiPropertyOptional({ example: '9783641201968', type: String })
     readonly isbn?: string | null | undefined;
 
     @Prop({ type: String })
-    @ApiProperty({ example: 'https://acme.de/', type: String })
-    @IsUrl()
+    @ApiPropertyOptional({ example: 'https://acme.de/', type: String })
     readonly homepage?: string | null | undefined;
 
     @Prop({ type: [String], sparse: true })
-    @ApiProperty({ example: ['JAVASCRIPT', 'TYPESCRIPT'] })
+    @ApiPropertyOptional({ example: ['JAVASCRIPT', 'TYPESCRIPT'] })
     readonly schlagwoerter?: string[] | null | undefined;
 
     //   @Prop({type: {}}) readonly autoren: unknown;

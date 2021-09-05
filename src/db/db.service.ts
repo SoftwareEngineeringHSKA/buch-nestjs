@@ -169,6 +169,8 @@ export class DbService {
         }
 
         const collection = await this.buchModel.createCollection();
+        // Use safeStringify() with NestJS logger
+        // https://www.npmjs.com/package/fast-safe-stringify
         this.#logger.warn(
             `Die Collection ${safeStringify(
                 collection.collectionName,
@@ -178,11 +180,7 @@ export class DbService {
         const insertedDocs = await this.buchModel.insertMany(this.testdaten, {
             lean: true,
         });
-        // this.testdaten.forEach(
-        //     data => {
-        //         logger.debug(data._id)
-        //     }
-        // )
+
         this.#logger.warn(
             `${safeStringify(
                 insertedDocs.length,

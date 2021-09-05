@@ -30,6 +30,7 @@ import {
 import { Controller } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
+    ApiBasicAuth,
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiNoContentResponse,
@@ -63,6 +64,7 @@ import {
 // @Controller('buch'), dann werden die Requests über folgenden Pfad geleitet:
 // localhost/buch
 @ApiBearerAuth('token')
+@ApiBasicAuth()
 @Controller('api/buecher')
 export class BuchController {
     readonly #logger: Logger;
@@ -119,6 +121,7 @@ export class BuchController {
     // ==========================================
 
     @Get(':id')
+    @ApiOperation({ summary: 'Buch anhand der ID suchen' })
     async findById(@Param('id') id: string) {
         // @Req() req: Request,
         // @Res() res: Response
@@ -145,6 +148,7 @@ export class BuchController {
      */
     @Public()
     @Get()
+    @ApiOperation({ summary: 'Bücher mit Suchkriterien suchen' })
     async find(
         @Query() query: BuchQuery,
         @Req() req: Request,
