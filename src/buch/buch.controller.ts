@@ -119,7 +119,7 @@ export class BuchController {
             return;
         }
 
-        const location = `${getBaseUri(req)}/${result}`;
+        const location = `${getBaseUri(req)}/api/buecher/${result}`;
         this.#logger.debug(`create: location=${location}`);
         res.location(location).send();
     }
@@ -267,7 +267,8 @@ export class BuchController {
     //  https://stackoverflow.com/questions/1051182/what-is-a-data-transfer-object-dto
     // eslint-disable-next-line max-params
     private toDTO(buch: BuchDocument, req: Request, id: string, all = true) {
-        const baseUri = getBaseUri(req);
+        const controllerPath = '/api/buecher';
+        const baseUri = getBaseUri(req) + controllerPath;
         this.#logger.debug(`#toDTO: baseUri=${baseUri}`);
         const links = all
             ? {
