@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, Put } from '@nestjs/common';
 /*
  * Copyright (C) 2021 - present Juergen Zimmermann, Hochschule Karlsruhe
  *
@@ -20,6 +20,7 @@ import {
     Body,
     Delete,
     Get,
+    Headers,
     HttpStatus,
     Param,
     Post,
@@ -33,8 +34,11 @@ import {
     ApiBasicAuth,
     ApiBearerAuth,
     ApiCreatedResponse,
+    ApiHeader,
     ApiNoContentResponse,
     ApiOperation,
+    ApiPreconditionFailedResponse,
+    ApiResponse,
 } from '@nestjs/swagger';
 import { ObjectID } from 'bson';
 import { Request, Response } from 'express';
@@ -43,6 +47,7 @@ import { Public } from '../auth/jwt-auth.guard';
 import { getBaseUri } from '../shared';
 import { Role } from '../users/role.enum';
 import { Roles } from '../users/roles.decorator';
+import safeStringify from 'fast-safe-stringify';
 
 import { Buch, BuchDocument, BuchDTO, BuecherDTO } from './buch';
 import { BuchQuery } from './buch.query';
@@ -178,6 +183,47 @@ export class BuchController {
     // ==========================================
     // ================= UPDATE =================
     // ==========================================
+    @Put(':id')
+    @ApiOperation({ summary: 'Ein vorhandenes Buch aktualisieren' })
+    @ApiHeader({
+        name: 'If-Match',
+        description: 'Header für optimistische Synchronisation',
+        required: false,
+    })
+    @ApiNoContentResponse({ description: 'Erfolgreich aktualisiert' })
+    @ApiBadRequestResponse({ description: 'Fehlerhafte Buchdaten' })
+    @ApiPreconditionFailedResponse({
+        description: 'Falsche Version im Header "If-Match"',
+    })
+    @ApiResponse({ status: 428, description: 'Header "If-Match" fehlt' })
+    async update(
+        @Body() buch: Buch,
+        @Param('id') id: string,
+        @Headers('If-Match') version: string | undefined,
+        @Res() res: Response,
+    ) {
+        this.#logger.debug(
+            `update: buch=${safeStringify(buch)}, id=${id}, version=${version}`,
+        );
+
+        if (version === undefined) {
+            const msg = 'Header "If-Match" fehlt';
+            this.#logger.debug(`#handleUpdateError: ${msg}`);
+            // https://github.com/nestjs/nest/issues/7859
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            res.status(428).set('Content-Type', 'text/plain').send(msg);
+            return;
+        }
+
+        const result = await this.buchService.update(buch, id, version);
+        if (result instanceof BuchServiceError) {
+            this.handleUpdateError(result, res);
+            return;
+        }
+
+        this.#logger.debug(`update: version=${result}`);
+        res.set('ETag', result.toString()).sendStatus(HttpStatus.NO_CONTENT);
+    }
 
     // ==========================================
     // ================= DELETE =================
@@ -192,6 +238,7 @@ export class BuchController {
      * @returns Leeres Promise-Objekt.
      */
     @Delete(':id')
+    @Roles(Role.Admin)
     @ApiOperation({ summary: 'Buch mit der ID löschen' })
     @ApiNoContentResponse({
         description: 'Das Buch wurde gelöscht oder war nicht vorhanden',
