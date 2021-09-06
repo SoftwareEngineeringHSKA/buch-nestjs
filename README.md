@@ -34,11 +34,11 @@
 - Logger überall updaten und sicher gehen, dass Objekte vernünftig repräsentiert werden
 <!-- - Auth mit Swagger richtig einstellen, bisher funktioniert das Token nur für die erste Request -->
 <!-- - "Unnötige" bzw. nicht benötigte Schnittstellen aus Swagger entfernen -->
-- Update Funktion testen
+<!-- - Update Funktion testen -->
 <!-- - Nutzerrollen integrieren und testen -->
 - Nichtbenutzte Daten entfernen
 - Nochmal auth service prüfen, insbesondere ob die local.strategy überhaupt (noch) benötigt wird
-- HATEOAS Links stimmen noch nicht mit dem NestJS Pfad überein
+<!-- - HATEOAS Links stimmen noch nicht mit dem NestJS Pfad überein -->
 
 
 ## Inhalt

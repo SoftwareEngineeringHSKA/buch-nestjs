@@ -17,7 +17,6 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ApiProperty } from '@nestjs/swagger';
 
 import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';

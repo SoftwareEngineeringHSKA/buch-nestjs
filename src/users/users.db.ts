@@ -39,9 +39,9 @@ export const users: User[] = [
         email: 'admin@acme.com',
         roles: [
             Role.Admin,
-            // Role.Abteilungsleiter,
-            // Role.Mitarbeiter,
-            // Role.Kunde,
+            Role.Abteilungsleiter,
+            Role.Mitarbeiter,
+            Role.Kunde,
         ],
     },
     {
