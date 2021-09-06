@@ -35,11 +35,15 @@ import {
     ApiBasicAuth,
     ApiBearerAuth,
     ApiCreatedResponse,
+    ApiForbiddenResponse,
     ApiHeader,
     ApiNoContentResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
     ApiOperation,
     ApiPreconditionFailedResponse,
     ApiResponse,
+    ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ObjectID } from 'bson';
 import { Request, Response } from 'express';
@@ -77,6 +81,9 @@ import {
 export class BuchController {
     readonly #logger: Logger;
 
+    // API Operations für Swagger
+    // https://docs.nestjs.com/openapi/operations
+
     // Dependency Injection
     // Hier wird der BuchService in den BuchController eingebunden
     constructor(private readonly buchService: BuchService) {
@@ -107,6 +114,12 @@ export class BuchController {
     @ApiOperation({ summary: 'Ein neues Buch anlegen' })
     @ApiCreatedResponse({ description: 'Erfolgreich neu angelegt' })
     @ApiBadRequestResponse({ description: 'Fehlerhafte Buchdaten' })
+    @ApiUnauthorizedResponse({
+        description: 'Nicht angemeldet',
+    })
+    @ApiForbiddenResponse({
+        description: 'Fehlende Berechtigung zum Anlegen eines Buches',
+    })
     async create(
         @Body() buch: Buch,
         @Req() req: Request,
@@ -130,7 +143,20 @@ export class BuchController {
     // ==========================================
 
     @Get(':id')
+    @Public()
     @ApiOperation({ summary: 'Buch anhand der ID suchen' })
+    @ApiHeader({
+        name: 'If-None-Match',
+        description: 'Header für bedingte GET-Requests',
+        required: false,
+    })
+    @ApiOkResponse({ description: 'Das Buch wurde gefunden' })
+    @ApiNotFoundResponse({ description: 'Kein Buch zur ID gefunden' })
+    // https://github.com/nestjs/swagger/issues/1501
+    @ApiResponse({
+        status: HttpStatus.NOT_MODIFIED,
+        description: 'Das Buch wurde bereits heruntergeladen',
+    })
     async findById(@Param('id') id: string) {
         // @Req() req: Request,
         // @Res() res: Response
@@ -158,15 +184,16 @@ export class BuchController {
     @Public()
     @Get()
     @ApiOperation({ summary: 'Bücher mit Suchkriterien suchen' })
+    @ApiOkResponse({ description: 'Eine evtl. leere Liste mit Büchern' })
     async find(
         @Query() query: BuchQuery,
         @Req() req: Request,
         @Res() res: Response,
     ) {
-        this.#logger.debug(`find: query=${query}`);
+        this.#logger.debug(`find: query=${safeStringify(query)}`);
 
         const buecher = await this.buchService.find(query);
-        this.#logger.debug(`find: ${buecher}`);
+        this.#logger.debug(`find: ${safeStringify(buecher)}`);
 
         // HATEOAS: Atom Links je Buch
         const buecherDTO = buecher.map((buch) => {
@@ -174,7 +201,7 @@ export class BuchController {
             // @typescript-eslint/no-base-to-string
             return this.toDTO(buch, req, id, false);
         });
-        this.#logger.debug(`find: buecherDTO=${buecherDTO}`);
+        this.#logger.debug(`find: buecherDTO=${safeStringify(buecherDTO)}`);
 
         const result: BuecherDTO = { _embedded: { buecher: buecherDTO } };
 
@@ -197,6 +224,12 @@ export class BuchController {
         description: 'Falsche Version im Header "If-Match"',
     })
     @ApiResponse({ status: 428, description: 'Header "If-Match" fehlt' })
+    @ApiUnauthorizedResponse({
+        description: 'Nicht angemeldet',
+    })
+    @ApiForbiddenResponse({
+        description: 'Fehlende Berechtigung zum Aktualisieren eines Buches',
+    })
     async update(
         @Body() buch: Buch,
         @Param('id') id: string,
@@ -244,6 +277,12 @@ export class BuchController {
     @ApiNoContentResponse({
         description: 'Das Buch wurde gelöscht oder war nicht vorhanden',
     })
+    @ApiUnauthorizedResponse({
+        description: 'Nicht angemeldet',
+    })
+    @ApiForbiddenResponse({
+        description: 'Fehlende Berechtigung zum Löschen eines Buches',
+    })
     async delete(@Param('id') id: string, @Res() res: Response) {
         this.#logger.debug(`delete: id=${id}`);
 
@@ -270,7 +309,7 @@ export class BuchController {
     private toDTO(buch: BuchDocument, req: Request, id: string, all = true) {
         const controllerPath = '/api/buecher';
         const baseUri = getBaseUri(req) + controllerPath;
-        this.#logger.debug(`#toDTO: baseUri=${baseUri}`);
+        this.#logger.debug(`#toDTO: baseUri=${safeStringify(baseUri)}`);
         const links = all
             ? {
                   self: { href: `${baseUri}/${id}` },
@@ -281,7 +320,9 @@ export class BuchController {
               }
             : { self: { href: `${baseUri}/${id}` } };
 
-        this.#logger.debug(`#toDTO: buch=${buch}, links=${links}`);
+        this.#logger.debug(
+            `#toDTO: buch=${safeStringify(buch)}, links=${links}`,
+        );
         const buchDTO: BuchDTO = {
             titel: buch.titel,
             rating: buch.rating,
@@ -316,13 +357,15 @@ export class BuchController {
     }
 
     private handleValidationError(messages: readonly string[], res: Response) {
-        this.#logger.debug(`#handleValidationError: messages=${messages}`);
+        this.#logger.debug(
+            `#handleValidationError: messages=${safeStringify(messages)}`,
+        );
         res.status(HttpStatus.BAD_REQUEST).send(messages);
     }
 
     private handleTitelExists(titel: string | null | undefined, res: Response) {
         const msg = `Der Titel "${titel}" existiert bereits.`;
-        this.#logger.debug(`#handleTitelExists(): msg=${msg}`);
+        this.#logger.debug(`#handleTitelExists(): msg=${safeStringify(msg)}`);
         res.status(HttpStatus.BAD_REQUEST)
             .set('Content-Type', 'text/plain')
             .send(msg);
@@ -330,7 +373,7 @@ export class BuchController {
 
     private handleIsbnExists(isbn: string | null | undefined, res: Response) {
         const msg = `Die ISBN-Nummer "${isbn}" existiert bereits.`;
-        this.#logger.debug(`#handleIsbnExists(): msg=${msg}`);
+        this.#logger.debug(`#handleIsbnExists(): msg=${safeStringify(msg)}`);
         res.status(HttpStatus.BAD_REQUEST)
             .set('Content-Type', 'text/plain')
             .send(msg);
@@ -345,7 +388,7 @@ export class BuchController {
         if (err instanceof BuchNotExists) {
             const { id } = err;
             const msg = `Es gibt kein Buch mit der ID "${id}".`;
-            this.#logger.debug(`#handleUpdateError: msg=${msg}`);
+            this.#logger.debug(`#handleUpdateError: msg=${safeStringify(msg)}`);
             res.status(HttpStatus.PRECONDITION_FAILED)
                 .set('Content-Type', 'text/plain')
                 .send(msg);
@@ -360,7 +403,7 @@ export class BuchController {
         if (err instanceof VersionInvalid) {
             const { version } = err;
             const msg = `Die Versionsnummer "${version}" ist ungueltig.`;
-            this.#logger.debug(`#handleUpdateError: msg=${msg}`);
+            this.#logger.debug(`#handleUpdateError: msg=${safeStringify(msg)}`);
             res.status(HttpStatus.PRECONDITION_FAILED)
                 .set('Content-Type', 'text/plain')
                 .send(msg);
@@ -370,7 +413,7 @@ export class BuchController {
         if (err instanceof VersionOutdated) {
             const { version } = err;
             const msg = `Die Versionsnummer "${version}" ist nicht aktuell.`;
-            this.#logger.debug(`#handleUpdateError: msg=${msg}`);
+            this.#logger.debug(`#handleUpdateError: msg=${safeStringify(msg)}`);
             res.status(HttpStatus.PRECONDITION_FAILED)
                 .set('Content-Type', 'text/plain')
                 .send(msg);

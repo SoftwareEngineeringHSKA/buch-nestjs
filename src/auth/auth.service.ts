@@ -16,11 +16,11 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/user';
 import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';
-import { User } from '../users/user';
 
 @Injectable()
 export class AuthService {

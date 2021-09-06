@@ -18,12 +18,14 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
+import safeStringify from 'fast-safe-stringify';
+
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
     #logger = new Logger(LoggerMiddleware.name);
     use(req: Request, res: Response, next: NextFunction) {
-        this.#logger.log('Request URL: ', req.url);
-        this.#logger.log('Response: HEADER ', res.header);
+        this.#logger.log(`Request URL:  ${safeStringify(req.url)}`);
+        this.#logger.log(`Response: HEADER  ${safeStringify(res.header)}`);
         next();
     }
 }

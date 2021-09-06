@@ -73,7 +73,9 @@ async function bootstrap() {
     // SWAGGER
     const config = new DocumentBuilder()
         .setTitle('Buecher Beispiel')
-        .setDescription('Eine beispielhafte NestJS Anwendung')
+        .setDescription(
+            'REST-Schnittstelle einer beispielhaften NestJS Anwendung',
+        )
         .setVersion('1.0')
         .addTag('buecher')
         .addBasicAuth()
