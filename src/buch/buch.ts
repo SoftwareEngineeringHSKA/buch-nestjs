@@ -21,13 +21,13 @@
  * @packageDocumentation
  */
 
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsIn, IsString, IsUrl } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import type { ObjectID } from 'bson';
 import { dbConfig } from '../config';
 import mongoose from 'mongoose';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsString, IsUrl } from 'class-validator';
 
 /**
  * Alias-Typ für gültige Strings bei Verlagen.
@@ -52,7 +52,8 @@ const MONGOOSE_OPTIONS = {
     // https://mongoosejs.com/docs/guide.html#options
     // default: virtueller getter "id"
     // id: true,
-
+    // https://stackoverflow.com/questions/63234815/mongodb-and-nest-js-define-a-custom-name-for-a-collection
+    collection: 'buecher',
     // createdAt und updatedAt als automatisch gepflegte Felder
     timestamps: true,
     // http://thecodebarbarian.com/whats-new-in-mongoose-5-10-optimistic-concurrency.html
