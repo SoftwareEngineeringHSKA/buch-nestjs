@@ -43,6 +43,7 @@ import {
     ApiOperation,
     ApiPreconditionFailedResponse,
     ApiResponse,
+    ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ObjectID } from 'bson';
@@ -77,6 +78,7 @@ import {
 // localhost/buch
 @ApiBearerAuth('token')
 @ApiBasicAuth()
+@ApiTags('Bücher')
 @Controller('api/buecher')
 export class BuchController {
     readonly #logger: Logger;

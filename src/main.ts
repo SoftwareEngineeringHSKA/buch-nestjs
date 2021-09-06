@@ -15,7 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+    DocumentBuilder,
+    SwaggerCustomOptions,
+    SwaggerModule,
+} from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { k8sConfig, nodeConfig } from './config';
 import { release, type, userInfo } from 'os';
@@ -32,7 +36,7 @@ import stripIndent from 'strip-indent';
 const { host, nodeEnv, port, serviceHost, servicePort } = nodeConfig;
 const isK8s = k8sConfig.detected;
 let httpsOptions: HttpsOptions | undefined;
-const swaggerPath = '/api';
+const swaggerPath = 'swagger';
 
 // "Arrow Function" ab ES 2015
 const logInfos = () => {
@@ -72,12 +76,11 @@ async function bootstrap() {
 
     // SWAGGER
     const config = new DocumentBuilder()
-        .setTitle('Buecher Beispiel')
+        .setTitle('Bücher Beispiel')
         .setDescription(
             'REST-Schnittstelle einer beispielhaften NestJS Anwendung',
         )
         .setVersion('1.0')
-        .addTag('buecher')
         .addBasicAuth()
         .addBearerAuth(
             {
@@ -92,8 +95,11 @@ async function bootstrap() {
         )
         .build();
     const document = SwaggerModule.createDocument(app, config);
+    const customSwaggerOptions: SwaggerCustomOptions = {
+        customSiteTitle: 'Swagger - BuchBeispiel - NestJS',
+    };
 
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup(swaggerPath, app, document, customSwaggerOptions);
 
     // HELMET
     app.use(helmet());
