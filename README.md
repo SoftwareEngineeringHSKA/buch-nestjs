@@ -39,8 +39,7 @@
 - Nichtbenutzte Daten entfernen
 - Nochmal auth service prüfen, insbesondere ob die local.strategy überhaupt (noch) benötigt wird
 <!-- - HATEOAS Links stimmen noch nicht mit dem NestJS Pfad überein -->
-- jwt via logindaten direkt über swagger erhalten
-- buecher und nicht default bei swagger verwenden
+<!-- - buecher und nicht default bei swagger verwenden -->
 
 ## Inhalt
 

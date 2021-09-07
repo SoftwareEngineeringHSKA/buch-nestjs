@@ -40,7 +40,7 @@ export class AppController {
     @UseGuards(LocalAuthGuard)
     @Public()
     @ApiExcludeEndpoint()
-    @Post('auth/login')
+    @Post('api/auth/login')
     @ApiBasicAuth()
     async login(@Request() req) {
         return this.authService.login(req.user);

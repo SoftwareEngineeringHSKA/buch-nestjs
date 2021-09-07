@@ -71,6 +71,14 @@ const logInfos = () => {
     logger.log(`OpenAPI: /${swaggerPath}`);
 };
 
+// CORS CONFIGURATION
+const corsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+};
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
@@ -81,14 +89,13 @@ async function bootstrap() {
             'REST-Schnittstelle einer beispielhaften NestJS Anwendung',
         )
         .setVersion('1.0')
-        .addBasicAuth()
         .addBearerAuth(
             {
                 type: 'http',
                 scheme: 'bearer',
                 bearerFormat: 'JWT',
                 name: 'JWT',
-                description: 'Enter JWT token',
+                description: 'Hier JWT Token einfügen',
                 in: 'header',
             },
             'token',
@@ -103,6 +110,9 @@ async function bootstrap() {
 
     // HELMET
     app.use(helmet());
+
+    // CORS
+    app.enableCors(corsOptions);
 
     // VALIDATION
     app.useGlobalPipes(new ValidationPipe());

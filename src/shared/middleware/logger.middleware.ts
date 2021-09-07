@@ -25,7 +25,6 @@ export class LoggerMiddleware implements NestMiddleware {
     #logger = new Logger(LoggerMiddleware.name);
     use(req: Request, res: Response, next: NextFunction) {
         this.#logger.log(`Request URL:  ${safeStringify(req.url)}`);
-        this.#logger.log(`Response: HEADER  ${safeStringify(res.header)}`);
         next();
     }
 }
