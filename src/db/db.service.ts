@@ -54,17 +54,6 @@ export class DbService {
             isbn: '9783897225831',
             homepage: 'https://acme.at/',
             schlagwoerter: ['JAVASCRIPT'],
-            // autoren: [
-            //     {
-            //         nachname: 'Alpha',
-            //         vorname: 'Adriana',
-            //     },
-            //     {
-            //         nachname: 'Alpha',
-            //         vorname: 'Alfred',
-            //     },
-            // ],
-            // __v: 0,
         },
         {
             // _id: MUUID.from('00000000-0000-0000-0000-000000000002'),
@@ -79,13 +68,6 @@ export class DbService {
             isbn: '9783827315526',
             homepage: 'https://acme.biz/',
             schlagwoerter: ['TYPESCRIPT'],
-            // autoren: [
-            //     {
-            //         nachname: 'Beta',
-            //         vorname: 'Brunhilde',
-            //     },
-            // ],
-            // __v: 0,
         },
         {
             // _id: MUUID.from('00000000-0000-0000-0000-000000000003'),
@@ -100,13 +82,6 @@ export class DbService {
             isbn: '9780201633610',
             homepage: 'https://acme.com/',
             schlagwoerter: ['JAVASCRIPT', 'TYPESCRIPT'],
-            // autoren: [
-            //     {
-            //         nachname: 'Gamma',
-            //         vorname: 'Claus',
-            //     },
-            // ],
-            // __v: 0,
         },
         {
             // _id: MUUID.from('00000000-0000-0000-0000-000000000004'),
@@ -121,14 +96,6 @@ export class DbService {
             isbn: '978038753406',
             homepage: 'https://acme.de/',
             schlagwoerter: [],
-            //   autoren:
-            //       [
-            //         {
-            //           nachname: 'Delta',
-            //           vorname: 'Dieter',
-            //         },
-            //       ],
-            // __v: 0,
         },
         {
             // _id: MUUID.from('00000000-0000-0000-0000-000000000005'),
@@ -143,14 +110,6 @@ export class DbService {
             isbn: '9783824404810',
             homepage: 'https://acme.es/',
             schlagwoerter: ['TYPESCRIPT'],
-            //   autoren:
-            //       [
-            //         {
-            //           nachname: 'Epsilon',
-            //           vorname: 'Elfriede',
-            //         },
-            //       ],
-            // __v: 0,
         },
     ];
     /* eslint-enable @typescript-eslint/naming-convention */
