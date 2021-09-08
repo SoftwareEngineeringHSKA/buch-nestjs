@@ -31,8 +31,8 @@ import type { FormatValidator } from 'ajv/dist/types';
 import { Logger } from '@nestjs/common';
 import ajvErrors from 'ajv-errors';
 import formatsPlugin from 'ajv-formats';
-import safeStringify from 'fast-safe-stringify';
 import { jsonSchema } from './jsonSchema';
+import safeStringify from 'fast-safe-stringify';
 
 const ajv = new Ajv2020({
     allowUnionTypes: true,
@@ -111,6 +111,13 @@ const logger = new Logger('validateBuch');
 export const validateBuch = (buch: Buch) => {
     const validate = ajv.compile<Buch>(jsonSchema);
     validate(buch);
+
+    logger.debug(
+        `validateBuch: buch=${safeStringify(buch)}, jsonSchema=${safeStringify(
+            jsonSchema,
+        )}`,
+    );
+
     // nullish coalescing
     const errors = validate.errors ?? [];
     const messages = errors

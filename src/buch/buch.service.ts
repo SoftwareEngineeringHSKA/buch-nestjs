@@ -34,6 +34,7 @@ import {
 } from './errors';
 import { validateBuch } from './validateBuch';
 import { Logger } from '@nestjs/common';
+import { safeStringify } from 'ajv/dist/compile/codegen/code';
 
 @Injectable()
 export class BuchService {
@@ -318,7 +319,9 @@ export class BuchService {
         }
 
         const version = result;
-        this.#logger.debug(`#validateUpdate: buch=${buch}, version=${version}`);
+        this.#logger.debug(
+            `#validateUpdate: buch=${safeStringify(buch)}, version=${version}`,
+        );
 
         const validationMsg = validateBuch(buch);
         if (validationMsg.length > 0) {

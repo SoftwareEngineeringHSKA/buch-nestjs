@@ -29,7 +29,7 @@ export const jsonSchema: GenericJsonSchema = {
     properties: {
         /* eslint-disable @typescript-eslint/naming-convention */
         // UUID-Objekte durch MUUID und nicht der Typ string
-        _id: { type: 'object' },
+        _id: { type: ['object', 'string'] },
         __v: {
             type: 'number',
             minimum: 0,
