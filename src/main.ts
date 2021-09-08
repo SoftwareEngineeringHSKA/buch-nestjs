@@ -73,8 +73,10 @@ const logInfos = () => {
 
 // CORS CONFIGURATION
 const corsOptions = {
-    origin: '*',
+    origin: ['https://localhost:4200', 'http://localhost:3000'], //DevSkim: ignore DS137138
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders:
+        'Origin,Content-Type,Accept,Authorization,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Allow,Content-Length,Date,Last-Modified,If-Match,If-Not-Match,If-Modified-Since',
     preflightContinue: false,
     optionsSuccessStatus: 204,
 };
